@@ -1,7 +1,6 @@
 from django.urls import path
-# from .views import home
+from .views import LawyerViewSet
 
 urlpatterns = [
-    # path('home/', home, name='home'),
-    # Add more URL patterns here
+    path('lawyers/', LawyerViewSet.as_view()),
 ]
