@@ -14,7 +14,7 @@ class Review(models.Model):
     comment = models.TextField()
     booking = models.ForeignKey('Booking', on_delete=models.CASCADE)
 
-# rani n implementi fel bookings
+# rani n implementi fel bookings kemelt
 
 class Lawyer(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE,null=True, blank=True)
