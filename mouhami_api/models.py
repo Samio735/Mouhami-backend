@@ -12,6 +12,9 @@ class Review(models.Model):
     reviewer_id = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     rating = models.FloatField()
     comment = models.TextField()
+    booking = models.ForeignKey('Booking', on_delete=models.CASCADE)
+
+# rani n implementi fel bookings kemelt
 
 class Lawyer(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE,null=True, blank=True)
@@ -19,7 +22,7 @@ class Lawyer(models.Model):
     email = models.EmailField()
     phone = models.CharField(max_length=20)
     photo = models.CharField(max_length=255)
-    wilaya = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
     lng = models.FloatField(null=True, blank=True)
     lat = models.FloatField(null=True, blank=True)
     specialities = models.ManyToManyField('Specialities', blank=True)
@@ -32,5 +35,4 @@ class Booking(models.Model):
     client_id = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
-    review = models.ForeignKey('Review', on_delete=models.CASCADE, null=True, blank=True)
     
