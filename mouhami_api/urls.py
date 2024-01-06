@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import LawyerViewSet
+from . import views
 
 urlpatterns = [
-    path('lawyers/', LawyerViewSet.as_view()),
+    path('lawyers/',views.lawyerData),
 ]
