@@ -16,11 +16,11 @@ def lawyerapi(request,id):
     
 
 @api_view(['GET','POST'])
-def booking(request,lawyer_id) :
+def booking(request,id) :
 
     if request.method =='GET' :
        
-       bookings = Booking.objects.filter(pk=lawyer_id)
+       bookings = Booking.objects.filter(lawyer_id=id)
        booking_serializer =BookingSerializer(bookings,many=True) 
        return Response(booking_serializer.data)
     
@@ -28,7 +28,7 @@ def booking(request,lawyer_id) :
        booking_serializer=BookingSerializer(data=request.data)
        if booking_serializer.is_valid():
            booking_serializer.save()
-           return Response("Added successfully")
+           return Response(booking_serializer.data)
        
 
 def reviews(request) :
