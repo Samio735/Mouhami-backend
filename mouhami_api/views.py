@@ -84,7 +84,7 @@ from .serializers import LawyerSerializer, LanguageSerializer, SpecialitiesSeria
 import json
 import random
 
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 def lawyerData(request):
     # Read data from cabinets.json file
     with open('cabinets.json', 'r', encoding='utf-8') as json_file:
@@ -136,17 +136,7 @@ def lawyerData(request):
             lawyer_instance.specialities.set(speciality_instances)
 
         return Response({"data inserted to the database successfully!!"})
-    else:
-        # Serialize data and return response
-        serializer_lawyer = LawyerSerializer(Lawyer.objects.all(), many=True)
-        serializer_language = LanguageSerializer(Language.objects.all(), many=True)
-        serializer_specialities = SpecialitiesSerializer(Specialities.objects.all(), many=True)
-        return Response({
-            "lawyers": serializer_lawyer.data,
-            "languages": serializer_language.data,
-            "specialities": serializer_specialities.data
-        })
-   
+    
 
 
 
