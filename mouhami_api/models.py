@@ -21,7 +21,7 @@ class Lawyer(models.Model):
     email = models.EmailField()
     phone = models.CharField(max_length=20)
     photo = models.CharField(max_length=255,null=True, blank=True)
-    wilaya = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
     lng = models.FloatField(null=True, blank=True)
     lat = models.FloatField(null=True, blank=True)
     specialities = models.ManyToManyField('Specialities', blank=True)
