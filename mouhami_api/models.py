@@ -14,15 +14,14 @@ class Review(models.Model):
     comment = models.TextField()
     booking = models.ForeignKey('Booking', on_delete=models.CASCADE)
 
-# rani n implementi fel bookings kemelt
 
 class Lawyer(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE,null=True, blank=True)
     name = models.CharField(max_length=255)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
-    photo = models.CharField(max_length=255)
-    location = models.CharField(max_length=255)
+    photo = models.CharField(max_length=255,null=True, blank=True)
+    wilaya = models.CharField(max_length=255)
     lng = models.FloatField(null=True, blank=True)
     lat = models.FloatField(null=True, blank=True)
     specialities = models.ManyToManyField('Specialities', blank=True)
