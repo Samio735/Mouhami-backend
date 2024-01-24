@@ -36,3 +36,79 @@ def reviews(request) :
         reviews=Review.object.all()
         review_serializer=ReviewSerializer(reviews)
         return Response(review_serializer.data)
+
+
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from mouhami_api.models import Language, Lawyer, Specialities
+from .serializers import LawyerSerializer, LanguageSerializer, SpecialitiesSerializer
+import json
+import random
+
+@api_view(['GET', 'POST'])
+def lawyerData(request):
+    # Read data from cabinets.json file
+    with open('scraper/cabinets.json', 'r', encoding='utf-8') as json_file:
+        cabinets_data = json.load(json_file)
+    all_languages=[]
+    if request.method == 'POST':
+        Language.objects.create(name='arabic')
+        Language.objects.create(name='french')
+        Language.objects.create(name='english')
+        for data in cabinets_data:
+            # Extract categories and assign default values if not present
+            specialities_data = data.get('categories', [])
+            # all_languages = [language.Name for language in Language.objects.all()]
+            for language in Language.objects.all():
+                all_languages.append(language)
+
+            # Check if there are languages available  
+            # Randomly select 1 or 2 languages
+            num_languages_to_select = random.randint(1, min(2, len(Language.objects.all())))
+            languages_data = random.sample(all_languages, num_languages_to_select)
+            language_instances = []
+            for lang in languages_data:
+                
+                language_instance= Language.objects.get(name=lang.name)
+                language_instances.append(language_instance)
+
+            # Create and save Specialities instances
+            speciality_instances = []
+            for speciality_name in specialities_data:
+                speciality_instance, created = Specialities.objects.get_or_create(name=speciality_name)
+                speciality_instances.append(speciality_instance)
+
+            # Create and save Lawyer instance
+            lawyer_data = {
+                'name': f"{data.get('name', '')} {data.get('fname', '')}",
+                'email': data.get('email', ''),
+                'phone': data.get('phone', ''),
+                'photo': data.get('avocat_image', ''),
+                'location': data.get('address', ''),
+                'lng': data.get('longitude', 0.0),
+                'lat': data.get('latitude', 0.0),
+                'rating': data.get('rating', 0.0),
+            }
+
+            lawyer_instance = Lawyer.objects.create(**lawyer_data)
+
+            # Update many-to-many relationships
+            lawyer_instance.languages.set(language_instances)
+            lawyer_instance.specialities.set(speciality_instances)
+
+        return Response({"data inserted to the database successfully!!"})
+
+    elif request.method == 'GET':
+        # Serialize data and return response
+        serializer_lawyer = LawyerSerializer(Lawyer.objects.all(), many=True)
+        serializer_language = LanguageSerializer(Language.objects.all(), many=True)
+        serializer_specialities = SpecialitiesSerializer(Specialities.objects.all(), many=True)
+
+        return Response({
+            "lawyers": serializer_lawyer.data,
+            "languages": serializer_language.data,
+            "specialities": serializer_specialities.data
+        })
+
