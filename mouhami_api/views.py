@@ -1,8 +1,12 @@
 from rest_framework import generics, viewsets
 from .models import Lawyer,Booking,Review
+from mouhami_api.models import Language, Lawyer, Specialities
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import LawyerSerializer,BookingSerializer,ReviewSerializer
+import json
+import random
+from .serializers import LawyerSerializer,BookingSerializer,ReviewSerializer,LanguageSerializer, SpecialitiesSerializer
+
 class LawyerViewSet(generics.ListAPIView):
     queryset = Lawyer.objects.all()
     serializer_class = LawyerSerializer
@@ -77,16 +81,9 @@ def mybookingsuser(request) :
              return Response(review_serializer.data)
 
 
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from mouhami_api.models import Language, Lawyer, Specialities
-from .serializers import LawyerSerializer, LanguageSerializer, SpecialitiesSerializer
-import json
-import random
 
 @api_view(['POST'])
 def lawyerData(request):
-    # Read data from cabinets.json file
     with open('cabinets.json', 'r', encoding='utf-8') as json_file:
         cabinets_data = json.load(json_file)
     all_languages=[]
@@ -95,14 +92,10 @@ def lawyerData(request):
         Language.objects.create(name='french')
         Language.objects.create(name='english')
         for data in cabinets_data:
-            # Extract categories and assign default values if not present
             specialities_data = data.get('categories', [])
-            # all_languages = [language.Name for language in Language.objects.all()]
             for language in Language.objects.all():
                 all_languages.append(language)
 
-            # Check if there are languages available  
-            # Randomly select 1 or 2 languages
             num_languages_to_select = random.randint(1, min(2, len(Language.objects.all())))
             languages_data = random.sample(all_languages, num_languages_to_select)
             language_instances = []
@@ -111,13 +104,11 @@ def lawyerData(request):
                 language_instance= Language.objects.get(name=lang.name)
                 language_instances.append(language_instance)
 
-            # Create and save Specialities instances
             speciality_instances = []
             for speciality_name in specialities_data:
                 speciality_instance, created = Specialities.objects.get_or_create(name=speciality_name)
                 speciality_instances.append(speciality_instance)
 
-            # Create and save Lawyer instance
             lawyer_data = {
                 'name': f"{data.get('name', '')} {data.get('fname', '')}",
                 'email': data.get('email', ''),
@@ -131,13 +122,33 @@ def lawyerData(request):
 
             lawyer_instance = Lawyer.objects.create(**lawyer_data)
 
-            # Update many-to-many relationships
             lawyer_instance.languages.set(language_instances)
             lawyer_instance.specialities.set(speciality_instances)
 
         return Response({"data inserted to the database successfully!!"})
     
 
+
+
+@api_view(['POST'])
+def searchLawyer(request):
+    if request.method == 'POST':
+        name = request.data.get('name', '')
+        wilaya = request.data.get('location', '')
+        langue = request.data.get('langue', '')
+        categorie = request.data.get('categorie', '')
+        rating = request.data.get('rating', '')
+
+        lawyer_list = Lawyer.objects.filter(
+            Q(name__icontains=name) &
+            Q(location__icontains=wilaya) &
+            Q(specialities__name__icontains=categorie) & 
+            Q(rating__icontains=rating) &
+            Q(languages__name__icontains=langue)  
+        ).distinct()
+
+        serializer = LawyerSerializer(lawyer_list, many=True)
+        return Response(serializer.data)
 
 
 
