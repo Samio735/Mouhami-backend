@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Lawyer,Booking,Review
+from .models import Lawyer,Booking,Review,Language,Specialities
 
 class LawyerSerializer(serializers.ModelSerializer):
     class Meta:
