@@ -50,7 +50,7 @@ import random
 @api_view(['GET', 'POST'])
 def lawyerData(request):
     # Read data from cabinets.json file
-    with open('scraper/cabinets.json', 'r', encoding='utf-8') as json_file:
+    with open('../cabinets.json', 'r', encoding='utf-8') as json_file:
         cabinets_data = json.load(json_file)
     all_languages=[]
     if request.method == 'POST':
