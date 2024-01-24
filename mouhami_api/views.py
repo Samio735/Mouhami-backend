@@ -136,7 +136,7 @@ def lawyerData(request):
             lawyer_instance.specialities.set(speciality_instances)
 
         return Response({"data inserted to the database successfully!!"})
-      else:
+    else:
         # Serialize data and return response
         serializer_lawyer = LawyerSerializer(Lawyer.objects.all(), many=True)
         serializer_language = LanguageSerializer(Language.objects.all(), many=True)
