@@ -26,7 +26,7 @@ class Lawyer(models.Model):
     lat = models.FloatField(null=True, blank=True)
     specialities = models.ManyToManyField('Specialities', blank=True)
     rating = models.FloatField(null=True, blank=True)
-    reviews = models.ManyToManyField('Review', blank=True)
+    reviews = models.ManyToManyField('Review', blank=True,null=True)
     languages = models.ManyToManyField('Language', blank=True)
 
 class Booking(models.Model):
