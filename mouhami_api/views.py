@@ -6,6 +6,7 @@ from .serializers import LawyerSerializer,BookingSerializer,ReviewSerializer
 class LawyerViewSet(generics.ListAPIView):
     queryset = Lawyer.objects.all()
     serializer_class = LawyerSerializer
+<<<<<<< HEAD
 @api_view(['GET'])
 def lawyerapi(request,id):
     if request.method =='GET' :
@@ -36,3 +37,6 @@ def reviews(request) :
         reviews=Review.object.all()
         review_serializer=ReviewSerializer(reviews)
         return Response(review_serializer.data)
+=======
+# added some views here 
+>>>>>>> 008547b2f2393b81692bde2e18c15df630925af1
