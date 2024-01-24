@@ -13,6 +13,7 @@ class Review(models.Model):
     rating = models.FloatField()
     comment = models.TextField()
     booking = models.ForeignKey('Booking', on_delete=models.CASCADE)
+    lawyer_id = models.ForeignKey('Lawyer', on_delete=models.CASCADE)
 
 
 class Lawyer(models.Model):

@@ -6,13 +6,18 @@ from .serializers import LawyerSerializer,BookingSerializer,ReviewSerializer
 class LawyerViewSet(generics.ListAPIView):
     queryset = Lawyer.objects.all()
     serializer_class = LawyerSerializer
+
+
 @api_view(['GET'])
 def lawyerapi(request,id):
     if request.method =='GET' :
        
        lawyer = Lawyer.objects.get(pk=id)
        lawyer_serializer =LawyerSerializer(lawyer) 
-       return Response(lawyer_serializer.data)
+
+       review = Review.objects.filter(lawyer_id=id)
+       review_serializer = ReviewSerializer(review,many=True)
+       return Response([lawyer_serializer.data,review_serializer.data])
     
 
 @api_view(['GET','POST'])
@@ -29,15 +34,47 @@ def booking(request,id) :
        if booking_serializer.is_valid():
            booking_serializer.save()
            return Response(booking_serializer.data)
-       
 
-def reviews(request) :
+@api_view(['GET'])
+def mybookingslawyer(request) :
+    if request.method=='GET' :
+        mybookings = Booking.objects.filter(lawyer_id=1)
+        mybooking_serializer =BookingSerializer(mybookings,many=True) 
+        return Response(mybooking_serializer.data)
+
+
+@api_view(['GET','POST'])
+def mybookingsuser(request) :
+    
     if request.method=='GET' :
         reviews=Review.object.all()
         review_serializer=ReviewSerializer(reviews)
         return Response(review_serializer.data)
+    elif request.method == 'GET':
+        # Serialize data and return response
+        serializer_lawyer = LawyerSerializer(Lawyer.objects.all(), many=True)
+        serializer_language = LanguageSerializer(Language.objects.all(), many=True)
+        serializer_specialities = SpecialitiesSerializer(Specialities.objects.all(), many=True)
+        return Response({
+            "lawyers": serializer_lawyer.data,
+            "languages": serializer_language.data,
+            "specialities": serializer_specialities.data
+        })
 
 
+        mybookings = Booking.objects.filter(client_id=1)
+        mybooking_serializer =BookingSerializer(mybookings,many=True) 
+
+        review = Review.objects.filter(reviewer_id=1)
+        review_serializer = ReviewSerializer(review,many=True)
+        return Response([mybooking_serializer.data,review_serializer.data])
+    
+    
+    elif request.method=='POST' :
+         review_serializer=ReviewSerializer(data=request.data)
+         if review_serializer.is_valid():
+             review_serializer.save()
+             return Response(review_serializer.data)
 
 
 from rest_framework.decorators import api_view
@@ -100,15 +137,8 @@ def lawyerData(request):
 
         return Response({"data inserted to the database successfully!!"})
 
-    elif request.method == 'GET':
-        # Serialize data and return response
-        serializer_lawyer = LawyerSerializer(Lawyer.objects.all(), many=True)
-        serializer_language = LanguageSerializer(Language.objects.all(), many=True)
-        serializer_specialities = SpecialitiesSerializer(Specialities.objects.all(), many=True)
+   
 
-        return Response({
-            "lawyers": serializer_lawyer.data,
-            "languages": serializer_language.data,
-            "specialities": serializer_specialities.data
-        })
+
+
 
