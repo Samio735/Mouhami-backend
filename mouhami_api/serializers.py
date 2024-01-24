@@ -16,3 +16,22 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta :
         model = Review
         fields = '__all__'
+
+
+
+
+
+
+
+class LanguageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Language
+        fields = '__all__'
+
+
+
+class SpecialitiesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Specialities
+        fields = '__all__'
+
