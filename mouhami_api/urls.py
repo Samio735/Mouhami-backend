@@ -5,8 +5,8 @@ from .views import LawyerViewSet,booking,lawyerapi,mybookingslawyer,mybookingsus
 
 urlpatterns = [
     path('lawyers/', LawyerViewSet.as_view()),
-    path('lawyers/<int:id>', lawyerapi),
-    path('lawyers/<int:id>/bookings/',booking),
+    path('lawyer-detailed/<int:id>', lawyerapi),
+    path('lawyer-booking/<int:id>/bookings/',booking),
     path('import-lawyers/',lawyerData),
     path('mybookingsuser/',mybookingsuser),
     path('mybookingslawyer/',mybookingslawyer),
