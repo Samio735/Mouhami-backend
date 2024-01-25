@@ -15,9 +15,8 @@ def lawyerapi(request,id):
        lawyer = Lawyer.objects.get(pk=id)
        lawyer_serializer =LawyerSerializer(lawyer) 
 
-       review = Review.objects.filter(lawyer_id=id)
-       review_serializer = ReviewSerializer(review,many=True)
-       return Response([lawyer_serializer.data,review_serializer.data])
+   
+       return Response(lawyer_serializer.data)
     
 
 @api_view(['GET','POST'])

@@ -5,6 +5,12 @@ class LawyerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lawyer
         fields = '__all__'
+    # get related reviews
+    reviews = serializers.SerializerMethodField()
+    def get_reviews(self, obj):
+        reviews = Review.objects.filter(lawyer_id=obj.id)
+        serializer = ReviewSerializer(reviews, many=True)
+        return serializer.data
 
 class BookingSerializer(serializers.ModelSerializer):
     class Meta :
@@ -16,6 +22,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta :
         model = Review
         fields = '__all__'
+        depth = 1
 
 
 
