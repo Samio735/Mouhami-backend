@@ -162,26 +162,5 @@ def searchLawyer(request):
         return Response(serializer.data)
 
 
-@api_view(['POST'])
-def searchLawyer(request):
-    if request.method == 'POST':
-        name = request.data.get('name', '')
-        wilaya = request.data.get('location', '')
-        langue = request.data.get('langue', '')
-        categorie = request.data.get('categorie', '')
-        rating = request.data.get('rating', '')
-
-        lawyer_list = Lawyer.objects.filter(
-            Q(name__icontains=name) &
-            Q(location__icontains=wilaya) &
-            Q(specialities__name__icontains=categorie) & 
-            Q(rating__icontains=rating) &
-            Q(languages__name__icontains=langue)  
-        ).distinct()
-
-        serializer = LawyerSerializer(lawyer_list, many=True)
-        return Response(serializer.data)
-
-
 
 
