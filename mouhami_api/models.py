@@ -1,6 +1,18 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
+
+AUTH_PROVIDER={'email':'email','google':'google'}
+class User(AbstractUser):
+  username=models.CharField( max_length=50,unique=True)
+  email=models.EmailField(unique=True)
+  is_avocat=models.BooleanField(default=False)
+  auth_provider=models.CharField(max_length=50 ,default=AUTH_PROVIDER.get('email'))
+  USERNAME_FIELD='email'
+  REQUIRED_FIELDS=['username']
+
+
+
 
 class Language(models.Model):
     name = models.CharField(max_length=255, unique=True,primary_key=True)
