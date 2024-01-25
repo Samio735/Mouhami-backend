@@ -3,6 +3,9 @@ from .models import Lawyer,Booking,Review
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import LawyerSerializer,BookingSerializer,ReviewSerializer
+from django.db.models import Q
+
+
 class LawyerViewSet(generics.ListAPIView):
     queryset = Lawyer.objects.all()
     serializer_class = LawyerSerializer
