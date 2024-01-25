@@ -34,5 +34,5 @@ class Booking(models.Model):
     lawyer_id = models.ForeignKey('Lawyer', on_delete=models.CASCADE)
     client_id = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     date = models.DateField()
-    time = models.TimeField()
+    time = models.IntegerField()
     
