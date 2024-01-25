@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import LawyerViewSet,booking,lawyerapi,mybookingslawyer,mybookingsuser,lawyerData
+from .views import LawyerViewSet,booking,lawyerapi,mybookingslawyer,mybookingsuser,lawyerData,searchLawyer
 
 
 urlpatterns = [
