@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                 ('user', models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.A>
                 ('specialities', models.ManyToManyField(blank=True, to='mouhami_api.specialities')),
                 ],
-        ),
+      ),
         migrations.CreateModel(
             name='Booking',
             fields=[
