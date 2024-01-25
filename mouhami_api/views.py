@@ -124,6 +124,7 @@ def lawyerData(request):
                 'phone': data.get('phone', ''),
                 'photo': data.get('avocat_image', ''),
                 'location': data.get('address', ''),
+                'wilaya': data.get('wilaya', ''),
                 'lng': data.get('longitude', 0.0),
                 'lat': data.get('latitude', 0.0),
                 'rating': data.get('rating', 0.0),
