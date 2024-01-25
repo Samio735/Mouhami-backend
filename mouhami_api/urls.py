@@ -10,4 +10,5 @@ urlpatterns = [
     path('import-lawyers/',lawyerData),
     path('mybookingsuser/',mybookingsuser),
     path('mybookingslawyer/',mybookingslawyer),
+    path('search-lawyers',searchLawyer),
 ]
