@@ -1,9 +1,20 @@
 from rest_framework import generics, viewsets
-from .models import Lawyer,Booking,Review
+from .models import Lawyer,Booking,Review,Language,Specialities,User
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import LawyerSerializer,BookingSerializer,ReviewSerializer
+from .serializers import LawyerSerializer,BookingSerializer,ReviewSerializer,LanguageSerializer,SpecialitiesSerializer,UserSerializer,UserRegistrationSerializer,LawyerRegistrationSerializer
 from django.db.models import Q
+import jwt
+from django.conf import settings
+import datetime
+from rest_framework import exceptions
+from rest_framework.permissions import AllowAny
+from rest_framework.generics import CreateAPIView
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+
 
 
 class LawyerViewSet(generics.ListAPIView):
@@ -160,6 +171,83 @@ def searchLawyer(request):
 
         serializer = LawyerSerializer(lawyer_list, many=True)
         return Response(serializer.data)
+
+
+
+
+def generate_access_token(user):
+    access_token_payload = {
+        'user_id': user.id,
+        'is_avocat':user.is_avocat,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=5),
+        'iat': datetime.datetime.utcnow(),
+    }
+    access_token = jwt.encode(access_token_payload,settings.SECRET_KEY, algorithm='HS256')
+    return access_token
+
+
+def generate_refresh_token(user):
+    refresh_token_payload = {
+        'user_id': user.id,
+        'username': user.username,
+        'is_avocat':user.is_avocat,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
+        'iat': datetime.datetime.utcnow()
+    }
+    refresh_token = jwt.encode(
+        refresh_token_payload, settings.SECRET_KEY, algorithm='HS256')
+    return refresh_token
+
+class UserRegistrationView(CreateAPIView):
+    serializer_class = UserRegistrationSerializer
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        response = {
+            'success' : 'True',
+            'message': 'client registered  successfully',
+            }
+        return Response(response)
+
+
+
+class AvocatRegistrationView(CreateAPIView):
+    serializer_class = LawyerRegistrationSerializer
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        response = {
+            'success' : 'True',
+            'message': 'client registered  successfully',
+            }
+        return Response(response)
+
+
+@api_view(['POST'])
+def login_view(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+    response = Response()
+    if (email is None) or (password is None):
+        raise exceptions.AuthenticationFailed(
+            'email and password required')
+
+    user = User.objects.filter(email=email).first()
+    if(user is None):
+        raise exceptions.AuthenticationFailed('user not found')
+    if (not user.password == password ):
+        raise exceptions.AuthenticationFailed('wrong password')
+    serialized_user = UserSerializer(user).data
+    access_token = generate_access_token(user)
+    refresh_token = generate_refresh_token(user)
+    response.data = {
+        'access_token': access_token,
+        'refresh_token': refresh_token,
+        'user': serialized_user,
+    }
+    return response
 
 
 

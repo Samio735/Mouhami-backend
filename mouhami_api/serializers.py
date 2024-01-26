@@ -72,18 +72,20 @@ class LawyerRegistrationSerializer(serializers.ModelSerializer):
         profile_data = validated_data.pop('Avocat_data')
         user = User.objects.create(username=username,first_name=first_name,last_name=last_name,email=email,password=password,is_avocat=True,auth_provider='gmail',is_active=False)
         user.save()
-        Av=Lawyer.objects.create(
+        lawyer=Lawyer.objects.create(
             user=user,
-            location=profile_data['address'],
+            location=profile_data['location'],
+            email=profile_data['email'],
+            name=profile_data['name'],
             phone=profile_data['phone'],
-            specialities=profile_data['specialities'],
-            languages=profile_data['languages'],
             wilaya=profile_data['wilaya'],
-            photo=profile_data['avocat_image'],
+            photo=profile_data['photo'],
             lat=profile_data['lat'],
             lng=profile_data['lng'],            
         )
-        return Av
+        lawyer.specialities.set(profile_data['specialities'])
+        lawyer.languages.set(profile_data['languages'])
+        return lawyer
     
     
 class UserRegistrationSerializer(serializers.ModelSerializer):  
@@ -107,7 +109,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         last_name = validated_data.pop('last_name')
         email= validated_data.pop('email')
         password = validated_data.pop('password1')
-        user = User.objects.create(username=username,first_name=first_name,last_name=last_name,email=email,password=password,is_client=True,is_active=True,auth_provider='gmail')
+        user = User.objects.create(username=username,first_name=first_name,last_name=last_name,email=email,password=password,is_active=True)
         user.save()
         return user
 
