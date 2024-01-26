@@ -1,6 +1,18 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
-# Create your models here.
+AUTH_PROVIDER={'email':'email','google':'google'}
+class User(AbstractUser):
+  username=models.CharField( max_length=50,unique=True)
+  email=models.EmailField(unique=True)
+  is_avocat=models.BooleanField(default=False)
+  auth_provider=models.CharField(max_length=50 ,default=AUTH_PROVIDER.get('email'))
+  USERNAME_FIELD='email'
+  REQUIRED_FIELDS=['username']
+
+
+
 
 class Language(models.Model):
     name = models.CharField(max_length=255, unique=True,primary_key=True)
@@ -9,7 +21,7 @@ class Specialities(models.Model):
     name = models.CharField(max_length=255, unique=True,primary_key=True)
 
 class Review(models.Model):
-    reviewer = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     rating = models.FloatField()
     comment = models.TextField()
     booking = models.ForeignKey('Booking', on_delete=models.CASCADE)
@@ -17,7 +29,7 @@ class Review(models.Model):
 
 
 class Lawyer(models.Model):
-    user = models.OneToOneField('auth.User', on_delete=models.CASCADE,null=True, blank=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,null=True, blank=True)
     name = models.CharField(max_length=255)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
@@ -32,7 +44,7 @@ class Lawyer(models.Model):
 
 class Booking(models.Model):
     lawyer_id = models.ForeignKey('Lawyer', on_delete=models.CASCADE)
-    client_id = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    client_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.IntegerField()
     

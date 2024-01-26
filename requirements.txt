@@ -5,3 +5,4 @@ pytz==2023.3.post1
 sqlparse==0.4.4
 gunicorn
 django-cors-headers
+PyJWT
