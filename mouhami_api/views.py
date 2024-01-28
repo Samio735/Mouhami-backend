@@ -47,6 +47,8 @@ def booking(request,id) :
        if booking_serializer.is_valid():
            booking_serializer.save()
            return Response(booking_serializer.data)
+       else :
+           return Response(status=400)
 
 @api_view(['GET'])
 def mybookingslawyer(request) :
@@ -60,8 +62,8 @@ def mybookingslawyer(request) :
 def mybookingsuser(request) :
     
     if request.method=='GET' :
-        reviews=Review.object.all()
-        review_serializer=ReviewSerializer(reviews)
+        reviews=Review.objects.all()
+        review_serializer=ReviewSerializer(reviews,many=True)
         return Response(review_serializer.data)
     elif request.method == 'GET':
         # Serialize data and return response
