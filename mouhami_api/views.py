@@ -22,7 +22,7 @@ class LawyerViewSet(generics.ListAPIView):
     serializer_class = LawyerSerializer
 
 
-class UserViewSet(viewsets.ListAPIView):
+class UserViewSet(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
