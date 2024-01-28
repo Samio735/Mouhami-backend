@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import LawyerViewSet,booking,lawyerapi,mybookingslawyer,mybookingsuser,lawyerData,searchLawyer,login_view,UserRegistrationView,AvocatRegistrationView
+from .views import LawyerViewSet,booking,lawyerapi,mybookingslawyer,mybookingsuser,lawyerData,searchLawyer,login_view,UserRegistrationView,AvocatRegistrationView,UserViewSet
 
 
 urlpatterns = [
@@ -14,5 +14,6 @@ urlpatterns = [
     path('login/',login_view),
     path('register/',UserRegistrationView.as_view()),
     path('register-lawyer/',AvocatRegistrationView.as_view()),
+    path('users/',UserViewSet.as_view()),
     
 ]

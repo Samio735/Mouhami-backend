@@ -22,6 +22,10 @@ class LawyerViewSet(generics.ListAPIView):
     serializer_class = LawyerSerializer
 
 
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    
 @api_view(['GET'])
 def lawyerapi(request,id):
     if request.method =='GET' :
