@@ -1,0 +1,3 @@
+my bookings ta3 client : 
+-GET bookings (idclient)
+-Post review and comment

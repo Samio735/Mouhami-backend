@@ -47,6 +47,8 @@ def booking(request,id) :
        if booking_serializer.is_valid():
            booking_serializer.save()
            return Response(booking_serializer.data)
+       else :
+           return Response(status=400)
 
 @api_view(['GET'])
 def mybookingslawyer(request) :
